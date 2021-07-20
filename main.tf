@@ -3,12 +3,12 @@ variable "project_name" { }
 variable "billing_account" { }
 variable "org_id" { }
 
-provider "google" {
-  region = var.region
-}
-
 locals {
   project_prefix = join("", [lower(replace(var.project_name, " ", "-")), "-"])
+}
+
+provider "google" { 
+  region = var.region
 }
 
 data "google_billing_account" "my_billing_account" {
@@ -17,7 +17,7 @@ data "google_billing_account" "my_billing_account" {
 
 resource "random_id" "id" {
   byte_length = 4
-  prefix      = local.project_prefix
+  prefix = local.project_prefix
 }
 
 resource "google_project" "project" {
@@ -27,6 +27,24 @@ resource "google_project" "project" {
   org_id = var.org_id
 }
 
-output "project_id" {
+output "id" {
   value = google_project.project.id
+}
+
+output "number" {
+  value = google_project.project.number
+}
+
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = ">= 3.75"
+    }
+    random = {
+     source = "hashicorp/random"
+      version = ">= 3.1"
+    }
+  }
 }
