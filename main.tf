@@ -27,6 +27,10 @@ resource "google_project" "project" {
   org_id = var.org_id
 }
 
+output "name" {
+  value = google_project.project.name
+}
+
 output "id" {
   value = google_project.project.id
 }
