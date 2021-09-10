@@ -2,6 +2,9 @@ variable "region" { }
 variable "project_name" { }
 variable "billing_account" { }
 variable "org_id" { }
+variable "rng_seed" { 
+  type = string
+}
 
 locals {
   project_prefix = join("", [lower(replace(var.project_name, " ", "-")), "-"])
@@ -17,6 +20,9 @@ data "google_billing_account" "my_billing_account" {
 
 resource "random_id" "id" {
   byte_length = 4
+  keepers = {
+    random_seed = "${var.rng_seed}"
+  }
   prefix = local.project_prefix
 }
 
